@@ -1,8 +1,8 @@
 "use strict";
 
 // assets 
-var csvSrc = "https://raw.githubusercontent.com/Enhuiz/ltgames/master/game-list/flappy-bird/csv/atlas.csv";
-var atlasSrc = "https://raw.githubusercontent.com/Enhuiz/ltgames/master/game-list/flappy-bird/img/atlas.png";
+var csvSrc = "res/csv/atlas.csv";
+var atlasSrc = "res/img/atlas.png";
 
 // game size
 var width = 288;
@@ -417,7 +417,7 @@ function render(gameState) {
         render.sprites = {};
         render.resourcesLoaded = false;
 
-        render.ctx.font = render.ctx.font.replace(/\d+px/, "16px");
+        render.ctx.font = render.ctx.font.replace(/\d+px/, "14px");
 
         render.image.addEventListener("load", function () {
             $.get(csvSrc, function (result) {
@@ -537,7 +537,7 @@ function gameLoop() {
     var curTime = (new Date).getTime();
     var lastTime = gameLoop.lastTime;
     gameLoop.lastTime = curTime;
-    render.ctx.fillText(Math.floor(1000 / (curTime - lastTime)) + ' fps', 15, 30);
+    render.ctx.fillText(Math.floor(1000 / (curTime - lastTime)) + 'fps', 15, 25);
 
     gameLoop.eachFrame.update(gameState);
 
