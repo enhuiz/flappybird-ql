@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Flappy Bird with Q learning</title>
+    <style>
+        canvas {
+            margin-top: 35px;
+            border: 4px solid #555;
+            padding: 5px;
+            border-radius: 10px;
+            background-color: #111;
+        }
+    </style>
+    <link href="https://cdn.bootcss.com/semantic-ui/2.2.10/semantic.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <center>
+        <canvas id="cvs" width="288" height="512"></canvas>
+        <br>
+        
+        <table id="panel" class="ui very basic collapsing table" style="display: none;">
+            <tbody>
+                <tr>
+                    <td>Max Score</td>
+                    <td> <span id="mscore-span">0</span></td>
+                </tr>
+                <tr>
+                    <td>Average Score</td>
+                    <td> <span id="ascore-span">0</span></td>
+                </tr>
+                <tr>
+                    <td>Round</td>
+                    <td> <span id="round-span">0</span></td>
+                </tr>
+                <tr>
+                    <td>Number of Q-learning States</td>
+                    <td> <span id="qstate-span">0</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        
+        <button id="ql-btn" class="ui basic button">Enable Q-learning</button>
+        <div class="ui basic icon buttons">
+            <button id="dec-fps-btn" class="ui button"><i class="backward icon"></i></button>
+            <button id="rst-fps-btn" class="ui button"><i class="undo icon"></i></button>
+            <button id="panel-btn" class="ui button"><i class="bar chart icon"></i></button>
+            <button id="inc-fps-btn" class="ui button"><i class="forward icon"></i></button>
+        </div>
+    </center>
+
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script src="../../utils.js"></script>
+    <script src="core.js"></script>
+
+    <script>
+        var qlBtn = document.getElementById("ql-btn");
+        $("#ql-btn").click(function () {
+            updateQL.enabled = !updateQL.enabled;
+            if (updateQL.enabled) {
+                qlBtn.innerText = "Disable Q-learning";
+            } else {
+                qlBtn.innerText = "Enable Q-learning";
+            }
+        });
+
+        $("#inc-fps-btn").click(function () {
+            gameLoop.timeScale = Math.min(gameLoop.timeScale * 1.2, 6);
+        });
+
+        $("#dec-fps-btn").click(function () {
+            gameLoop.timeScale = Math.max(gameLoop.timeScale * 0.833, 1 / 6);
+        });
+
+        $("#rst-fps-btn").click(function () {
+            gameLoop.timeScale = 1;
+        });
+
+        var panel = $("#panel");
+        $("#panel-btn").click(function () {
+            panel.toggle();
+        });
+
+        var fpsSpan = $("#fps-span");
+        var roundSpan = $("#round-span");
+        var maxScoreSpan = $("#mscore-span");
+        var averageScoreSpan = $("#ascore-span");
+        var qlStateSpan = $("#qstate-span");
+
+        var round = 0;
+        var maxScore = 0;
+        var averageScore = 0;
+        var qlState = 0;
+
+        gameLoop.eachFrame(function (gameState) {
+            if (!panel.is(":visible")) return;
+
+            var newRound = gameState.round;
+            if (round !== newRound) {
+                round = newRound;
+                roundSpan.text(round);
+            }
+
+            var newMaxScore = gameState.maxScore;
+            if (maxScore !== newMaxScore) {
+                maxScore = newMaxScore;
+                maxScoreSpan.text(maxScore);
+            }
+
+            var newAverageScore = (round == 0 ? 0 : gameState.totalScore / round).toFixed(3);
+            if (averageScore !== newAverageScore) {
+                averageScore = newAverageScore;
+                averageScoreSpan.text(averageScore);
+            }
+
+            var newQLState = updateQL.Q ? Object.keys(updateQL.Q).length : 0;
+            if (qlState !== newQLState) {
+                qlState = newQLState;
+                qlStateSpan.text(qlState);
+            }
+        });
+
+        gameLoop.start();
+    </script>
+</body>
+
+</html>
