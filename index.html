@@ -19,10 +19,19 @@
 </head>
 
 <body>
+    <div class="ui menu">
+        <div class="item header">Flappy Bird Q-learning</div>
+        <div class="right menu">
+            <a href="https://github.com/Enhuiz/flappybird-ql" class="ui item">
+            View on GitHub &nbsp
+            <i class="alternate github icon"></i></a>
+        </div>
+    </div>
+
     <center>
         <canvas id="cvs" width="288" height="512"></canvas>
         <br>
-        
+
         <table id="panel" class="ui very basic collapsing table" style="display: none;">
             <tbody>
                 <tr>
@@ -51,6 +60,8 @@
             <button id="panel-btn" class="ui button"><i class="bar chart icon"></i></button>
             <button id="inc-fps-btn" class="ui button"><i class="forward icon"></i></button>
         </div>
+        <br>
+
     </center>
 
     <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
